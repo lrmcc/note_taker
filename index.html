@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Luke McConnell">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Note Taker</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="note_taker.js"></script>
+    </head>
+<body>
+    <header>
+        <h1 class="site-title">Note Taker</h1>
+    </header>
+
+    <div class="note-entry">
+        <label for="note-title-text" >Title: </label>
+        <input type="text" id="note-title-text" onfocus="this.value=''" value="Enter Note Title"><br>
+        <label for="note-content-text" >Content: </label>
+        <textarea id="note-content" rows="4" cols="60" onfocus="this.value=''" onkeypress="submitWithReturn(event)">Enter Note Content Here</textarea>
+        <input type="submit" class="submit-note-button" onclick="getNote();">
+    </div>
+    <div class="note-entries">
+        <div id="note-entries">
+        </div>
+        <button class="export-notes-button" type="button" onclick="exportNotes()">Download</button><br>
+        <button class="clear-notes-button" type="button" onclick="clearNotes()">Clear</button>
+    </div>
+
+</body>
+</html>
