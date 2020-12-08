@@ -1,20 +1,3 @@
-// .note1{
-//     background-color: #61c6c0;
-//   }
-//   .note2{
-//     background-color: #cdc906;
-//   }
-//   .note3{
-//     background-color:#f86c75;
-//   }
-//   .note4{
-//     background-color: #f68eb1;
-//   }
-//   .note5{
-//     background-color: #ffa133;
-//   }
-
-//<p class="note">lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed justo nunc, dignissim id cursus nec, finibus in tortor. Nunc vestibulum hendrerit luctus. Duis erat sapien, tempor eu mauris at, imperdiet pretium massa. Mauris dui nisl, suscipit ac elit vitae, varius finibus nibh. In ultrices aliquam sapien, et viverra lorem commodo in. Phasellus quis diam hendrerit, finibus mauris sit amet, maximus sem. Integer sed viverra felis, tincidunt posuere sapien. Nullam commodo magna malesuada sem euismod, et sollicitudin dui egestas. Donec sagittis fermentum libero ac cursus. Aliquam consectetur iaculis turpis.</p>
 
 let entryCount = 1;
 let entries = [];
@@ -23,6 +6,8 @@ let cols = [];
 
 let emptyNoteEntries = "";
 let defaultNoteEntries = emptyNoteEntries + "";
+colors = ["#61c6c0", "#cdc906", "#f86c75", "#f68eb1", "#ffa133" ,"#f13e42"];
+colorCount = 0;
 
 function getNote(){
     let noteName = document.getElementById("note-title-text").value;
@@ -84,6 +69,7 @@ function addNote(entryCount, noteTuple){
     note.innerHTML += noteTuple[1];
     col.appendChild(note); 
     setClass(entryCount, "note");
+    setBackgroundColor(entryCount);
     cols[entryCount-1][1] = "notEmpty";
     console.log("AFTERaddNote::cols.length: " + cols.length);
     console.log("AFTERaddNote::cols: " + cols);
@@ -91,6 +77,11 @@ function addNote(entryCount, noteTuple){
 
 function setClass(id, clssname){
     document.getElementById(id).className = clssname;
+}
+function setBackgroundColor(id){
+    if (colorCount === 6) colorCount = 0;
+    document.getElementById(id).style.backgroundColor = colors[colorCount];
+    colorCount++;
 }
 
 function getNoteEntries(){

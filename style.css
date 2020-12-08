@@ -12,7 +12,7 @@
   display: table;
   clear: both;
 }
-/* 
+
 body{
   background-color: rgb(248, 231, 211);
   text-align: center;
@@ -39,10 +39,9 @@ body{
   background-color: #d1a179;
   margin: auto;
   border-radius: 20px;
-}*/
+}
 .note{
   text-align: left;
-  color: white;
   border: 1px solid rgb(209, 208, 208);
   border-radius: 5px;
 } 
