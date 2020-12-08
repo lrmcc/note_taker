@@ -1,25 +1,32 @@
-
 let entryCount = 1;
 let entries = [];
 let rowIDs = [];
 let cols = [];
+let tempEntries = [];
 
 let emptyNoteEntries = "";
 let defaultNoteEntries = emptyNoteEntries + "";
-colors = ["#61c6c0", "#cdc906", "#f86c75", "#f68eb1", "#ffa133" ,"#f13e42"];
-colorCount = 0;
+let colors = ["#61c6c0", "#cdc906", "#f86c75", "#f68eb1", "#ffa133" ,"#f13e42","#c890d1"];
+let colorCount = 0;
 
-function getNote(){
+function getInput(){
     let noteName = document.getElementById("note-title-text").value;
     let noteContent = document.getElementById("note-content").value;
     let noteTuple = [noteName, noteContent];
+    getNote(noteTuple);
+}
+
+function getNote(noteTuple){
     entries.push(noteTuple);
+    entryCount = entries.length;
     putNote(noteTuple);
     clearInput();
 } 
 
 function putNote(noteTuple){
-    entryCount = entries.length;
+    if ( getNoteEntriesInnerHTML()  === ""){
+        addRow();
+    }
     if ((entryCount % 3) === 1) addRow();
     addNote(entryCount, noteTuple);
 }
@@ -33,10 +40,10 @@ function addRow(){
     rowIDs.push(rowID);
     noteEntries.appendChild(row);
     setClass(rowID, "row");
-    addcols(rowID);
+    addCols(rowID);
 }
 
-function addcols(rowID){
+function addCols(rowID){
     let row = document.getElementById(rowID);
     for (let i = 0; i< 3; i++){
         let col = document.createElement("div");
@@ -57,75 +64,74 @@ function addNote(entryCount, noteTuple){
     note.id = entryCount;
     note.innerHTML = "<h3>" + noteTuple[0] + "</h3><br>" + noteTuple[1] + getClearNoteButton(entryCount);
     col.appendChild(note); 
-    col.appendChildcol.appendChild(); 
     setClass(entryCount, "note");
     setBackgroundColor(entryCount);
     cols[entryCount-1][1] = "notEmpty";
 }
 
-function setClass(id, clssname){
-    document.getElementById(id).className = clssname;
-}
-function setBackgroundColor(id){
-    if (colorCount === 6) colorCount = 0;
-    document.getElementById(id).style.backgroundColor = colors[colorCount];
-    colorCount++;
-}
-
-function getNoteEntries(){
-    return document.getElementById("note-entries");
-}
-
-function clearNoteFromNotes(itemEntryCount){
-    entries = entries.filter(a => a !== entries[itemEntryCount-1]);
-    entryCount = entries.length;
-    var noteEntries = document.getElementById("expense-table");
-    if (entryCount === 0){
-        noteEntries.innerHTML = defaultTable;
-    }
-    else{
-        noteEntries.innerHTML = emptyTable;
-        for (let i = 0; i < entries.length; i++){
-            let noteTuple = [entries[i][0], entries[i][1]];
-            addNote((i+1), noteTuple, noteEntries);
+function clearNoteFromNotes(noteIDToRemove){
+    entries = entries.filter(a => a !== entries[noteIDToRemove-1]);
+    if (entries.length === 0){
+        clearNotes();
+    }else{
+        var noteTable = getNoteEntries();
+        noteTable.innerHTML = "";
+        tempEntries = entries;
+        clearArrays();
+        colorCount = 0
+        for(let i = 0; i < tempEntries.length; i++){
+            let noteTuple = [tempEntries[i][0],tempEntries[i][1]];
+            getNote(noteTuple);
         }
     }
 }
 
-function exportNotes(){
-    let csvContent = "data:text/csv;charset=utf-8," + entries.toString();
-    var encodedUri = encodeURI(csvContent);
-    var link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "expense_data.csv");
-    document.body.appendChild(link);
-    link.click(); 
+// function exportNotes(){
+//     let csvContent = "data:text/csv;charset=utf-8," + entries.toString();
+//     var encodedUri = encodeURI(csvContent);
+//     var link = document.createElement("a");
+//     link.setAttribute("href", encodedUri);
+//     link.setAttribute("download", "expense_data.csv");
+//     document.body.appendChild(link);
+//     link.click(); 
+// }
+
+let setBackgroundColor = (id) => {
+    if (colorCount === 7) colorCount = 0;
+    document.getElementById(id).style.backgroundColor = colors[colorCount];
+    console.log(document.getElementById(id).style.backgroundColor);
+    colorCount++;
 }
 
-function clearNotes(){
-    let choice = confirm("Are you sure you want to clear the table?");
-    if (choice){
-        var noteTable = document.getElementById("note-entries");
-        entries = [];
-        rowIDs = [];
-        cols = [];
-        entryCount = 1;
-        noteTable.innerHTML = "";
-    }
-}
-
-function submitWithReturn(event) {
-    if (event.keyCode === 13) {
-        getNote();
-       }
-  }
-
-function clearInput(){
+let clearInput = () => {
     let notetitleInput = document.getElementById("note-title-text");
     notetitleInput.value = "Enter Note Title";
     document.getElementById("note-content").defaultValue ="Enter Note Content Here";
 }
 
-function getClearNoteButton(count){
-    return "<button type='button' class='clear-note-item-button' id=" + count +" onclick='clearNoteFromNotes(" + count + ")'>x</button>";
+let clearNotes = () => {
+    clearNoteEntriesInnerHTML();
+    clearArrays();
 }
+
+let clearArrays = () =>{
+    entries = [];
+    rowIDs = [];
+    cols = [];
+}
+
+let resetCols = (entryCount) => cols[entryCount][1] = "empty";
+
+let clearAllNotesPressed = () => (confirm("Are you sure you want to clear the table?")) ? clearNotes(): null;
+
+let setClass = (id, clssname) => document.getElementById(id).className = clssname;
+
+let submitWithReturn = (event) => (event.keyCode === 13) ? getInput() : null ;
+
+let getNoteEntries = () => document.getElementById("note-entries");
+
+let getNoteEntriesInnerHTML = () => document.getElementById("note-entries").innerHTML;
+
+let clearNoteEntriesInnerHTML = () => document.getElementById("note-entries").innerHTML = "";
+
+let getClearNoteButton = (count) => "<button type='button' class='clear-note-item-button' id=" + count +" onclick='clearNoteFromNotes(" + count + ")'>x</button>";

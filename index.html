@@ -14,17 +14,19 @@
     </header>
 
     <div class="note-entry">
+        <div class="note-entry-bckgrnd">
         <label for="note-title-text" >Title: </label>
         <input type="text" id="note-title-text" onfocus="this.value=''" value="Enter Note Title"><br>
         <label for="note-content-text" >Content: </label>
         <textarea id="note-content" rows="4" cols="60" onfocus="this.value=''" onkeypress="submitWithReturn(event)">Enter Note Content Here</textarea>
-        <input type="submit" class="submit-note-button" onclick="getNote();">
+        <input type="submit" class="submit-note-button" onclick="getInput();">
+        </div>
     </div>
     <div class="note-entries">
         <div id="note-entries">
         </div>
-        <button class="export-notes-button" type="button" onclick="exportNotes()">Download</button><br>
-        <button class="clear-notes-button" type="button" onclick="clearNotes()">Clear</button>
+        <!-- <button class="export-notes-button" type="button" onclick="exportNotes()">Download</button><br> -->
+        <button class="clear-notes-button" type="button" onclick="clearAllNotesPressed()">Clear</button>
     </div>
 
 </body>
