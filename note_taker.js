@@ -48,6 +48,9 @@ function addRow(){
     row.id = rowID;
     rowIDs.push(rowID);
     noteEntries.appendChild(row);
+    console.log("rowID.length: " + rowID.length);
+    console.log("rowID: " + rowID);
+    setClass(rowID, "row");
     addcols(rowID);
 }
 
@@ -62,21 +65,32 @@ function addcols(rowID){
         col.id = colID;
         cols.push(colTuple);
         row.appendChild(col);
+        setClass(colID, "column");
     }
+    console.log("cols.length: " + cols.length);
+    console.log("cols: " + cols);
 }
 
 function addNote(entryCount, noteTuple){
-    console.log("rowID.length: " + rowID.length);
-    console.log("rowID: " + rowID);
-    console.log("cols.length: " + cols.length);
-    console.log("cols: " + cols);
+    console.log("BEFOREaddNote::rowID.length: " + rowID.length);
+    console.log("BEFOREaddNote::rowID: " + rowID);
+    console.log("BEFOREaddNote::cols.length: " + cols.length);
+    console.log("BEFOREaddNote::cols: " + cols);
     let col = document.getElementById("col" + entryCount);
     let note = document.createElement("p");
     note.class="note";
     note.id = entryCount;
     note.innerHTML = "<h3>" + noteTuple[0] + "</h3><br>";
     note.innerHTML += noteTuple[1];
-    col.appendChild(note);
+    col.appendChild(note); 
+    setClass(entryCount, "note");
+    cols[entryCount-1][1] = "notEmpty";
+    console.log("AFTERaddNote::cols.length: " + cols.length);
+    console.log("AFTERaddNote::cols: " + cols);
+}
+
+function setClass(id, clssname){
+    document.getElementById(id).className = clssname;
 }
 
 function getNoteEntries(){
