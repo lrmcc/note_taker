@@ -24,9 +24,6 @@ function getNote(noteTuple){
 } 
 
 function putNote(noteTuple){
-    if ( getNoteEntriesInnerHTML()  === ""){
-        addRow();
-    }
     if ((entryCount % 3) === 1) addRow();
     addNote(entryCount, noteTuple);
 }
@@ -38,7 +35,7 @@ function addRow(){
     rowID = "row" + (rowIDs.length + 1);
     row.id = rowID;
     rowIDs.push(rowID);
-    noteEntries.appendChild(row);
+    noteEntries.append(row);
     setClass(rowID, "row");
     addCols(rowID);
 }
@@ -52,20 +49,26 @@ function addCols(rowID){
         let colTuple = [colID,"empty"];
         col.id = colID;
         cols.push(colTuple);
-        row.appendChild(col);
+        row.append(col);
         setClass(colID, "column");
     }
 }
 
 function addNote(entryCount, noteTuple){
     let col = document.getElementById("col" + entryCount);
-    let note = document.createElement("p");
-    note.class="note";
-    note.id = entryCount;
-    note.innerHTML = "<h3>" + noteTuple[0] + "</h3><br>" + noteTuple[1] + getClearNoteButton(entryCount);
-    col.appendChild(note); 
-    setClass(entryCount, "note");
-    setBackgroundColor(entryCount);
+    let note = createNote(entryCount, col)
+    let noteTitleID = ("noteTitle" + entryCount);
+    createNoteChild(noteTitleID,"h3", note, noteTuple[0], "note-title");
+    note.innerHTML += "<br>";
+    let noteContentID = ("noteContent" + entryCount);
+    createNoteChild(noteContentID,"p", note, noteTuple[1], "note-content");
+    note.innerHTML += \
+    
+    
+    (entryCount) + getClearNoteButton(entryCount);
+    note.innerHTML += "<br>";
+    let noteModalID = ("noteModal" + entryCount);
+    createNoteChild(noteModalID,"p", note, noteTuple[1], "note-modal");
     cols[entryCount-1][1] = "notEmpty";
 }
 
@@ -86,15 +89,37 @@ function clearNoteFromNotes(noteIDToRemove){
     }
 }
 
-// function exportNotes(){
-//     let csvContent = "data:text/csv;charset=utf-8," + entries.toString();
-//     var encodedUri = encodeURI(csvContent);
-//     var link = document.createElement("a");
-//     link.setAttribute("href", encodedUri);
-//     link.setAttribute("download", "expense_data.csv");
-//     document.body.appendChild(link);
-//     link.click(); 
-// }
+
+function createNote(entryCount, col){
+    let noteID = entryCount;
+    let note = createChildSetIDAppend("div", noteID, col);
+    setClass(noteID, "note");
+    setBackgroundColor(noteID);
+    return note;
+}
+
+function createNoteChild(elemID, type, note, content, clssNme){
+    let noteTitle = createChildSetIDAppend(type, elemID, note);
+    setClass(elemID, clssNme);
+    noteTitle.innerText = content;
+}
+
+function createChildSetIDAppend(elemType, elemID, appendToElem){
+    let newElem = document.createElement(elemType);
+    newElem.id = elemID;
+    appendToElem.append(newElem);
+    console.log
+    return newElem;
+}
+
+function seeModal(noteID){
+    let modalID = "noteModal" + noteID;
+    setClass(modalID, ".note .note-modal.active");
+    // let noteModal = document.getElementById(modalID);
+    // noteModal.innerHTML += <button onClick>Close</button>;
+}
+
+function closeModal(){}
 
 let setBackgroundColor = (id) => {
     if (colorCount === 7) colorCount = 0;
@@ -102,6 +127,8 @@ let setBackgroundColor = (id) => {
     console.log(document.getElementById(id).style.backgroundColor);
     colorCount++;
 }
+
+let changeColor = (element, colorChoice) => element.style.backgroundColor = colorChoice;
 
 let clearInput = () => {
     let notetitleInput = document.getElementById("note-title-text");
@@ -120,6 +147,8 @@ let clearArrays = () =>{
     cols = [];
 }
 
+let setInnerText = (elementID, words) => document.getElementById(elementID).innerText = words;
+
 let resetCols = (entryCount) => cols[entryCount][1] = "empty";
 
 let clearAllNotesPressed = () => (confirm("Are you sure you want to clear the table?")) ? clearNotes(): null;
@@ -130,10 +159,8 @@ let submitWithReturn = (event) => (event.keyCode === 13) ? getInput() : null ;
 
 let getNoteEntries = () => document.getElementById("note-entries");
 
-let getNoteEntriesInnerHTML = () => document.getElementById("note-entries").innerHTML;
-
 let clearNoteEntriesInnerHTML = () => document.getElementById("note-entries").innerHTML = "";
 
-let getClearNoteButton = (count) => "<button type='button' class='clear-note-item-button' id=" + count +" onclick='clearNoteFromNotes(" + count + ")'>x</button>";
+let getClearNoteButton = (noteID) => "<button type='button' class='clear-note-item-button' onclick='clearNoteFromNotes(" + noteID + ")'>&times;</button>";
 
-let lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin convallis dolor id porta dignissim. Pellentesque sed enim metus. Quisque condimentum eros enim, mollis mollis libero euismod eu. Nunc nec dui in ipsum vehicula volutpat. Cras fermentum tincidunt turpis, vitae mattis ipsum euismod non. Nam auctor rhoncus enim, quis ullamcorper magna rhoncus ut. Fusce vel sem nibh. Etiam at massa posuere, varius massa sit amet, feugiat erat. Suspendisse non dui felis. Vivamus pretium tellus non odio placerat, eget interdum ligula condimentum. In non ultrices nulla, sit amet consectetur lectus. In mollis eros lacus, ut iaculis sem pellentesque sed. Aenean nulla neque, sagittis eget nisl id, aliquam malesuada risus. Suspendisse gravida, orci eget placerat vulputate, arcu justo lobortis mauris, at fringilla nibh turpis eu elit. Phasellus egestas magna metus, ac luctus eros imperdiet non. Nullam rutrum dui non elit viverra, quis pretium mauris luctus. Sed sem lacus, finibus ut ante eu, convallis dictum nulla. Integer porttitor, purus et sollicitudin sollicitudin, sem urna vestibulum enim, vel lacinia ante massa et lacus. Cras elementum aliquet mi, suscipit pharetra nibh semper nec. Mauris neque enim, consectetur a finibus ac, placerat at metus. Duis iaculis eget risus nec ornare. Pellentesque vitae lorem lobortis, condimentum nibh ullamcorper, tincidunt nunc. Nullam quis pulvinar turpis. Morbi at ipsum at risus porta laoreet eu quis lorem. Ut ut neque mi. Praesent consectetur molestie enim, a vestibulum tellus eleifend quis. Sed eget condimentum augue. Praesent varius nibh magna, et eleifend sem iaculis in. Etiam nec ex ex. Pellentesque ut hendrerit enim."
+let getSeeModalButton = (noteID) => "<button type='button' class='see-modal-button' onclick='seeModal(" + noteID + ")'>See Entire Note</button>";

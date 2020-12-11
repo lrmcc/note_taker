@@ -1,6 +1,10 @@
 * {
   box-sizing: border-box;
 }
+label#note-title-entry-label, label#note-content-entry-label{
+  font-weight: bold;
+  font-size: x-large;
+}
 .column {
   float: left;
   width: 25%;
@@ -38,6 +42,7 @@ body{
 }
 
 .note-entries{
+  position: relative;
   border-top: 1px;
   border: 18px solid #b47a44;
   /* background-color: #d1a179; */
@@ -62,6 +67,34 @@ body{
   transform: scale(1.05);
 } 
 
+.note .note-title{
+  font-style: bold;
+  font-size: large;
+}
+
+.note .note-content{
+  font-size: medium;
+}
+
+.note .note-modal{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  transition: 200ms ease-in-out;
+  border: 1px solid black;
+  border-radius: 10px;
+  z-index: 10;
+  background-color: white;
+  width: 500px;
+  max-width: 80%;
+  transform: translate(-50%, -50%) scale(0);
+}
+.note .note-modal.active{
+  transform: translate(-50%, -50%) scale(4);
+}
+
+
 .submit-note-button{
   background-color: #3d00e0;
   color: white;
@@ -69,7 +102,6 @@ body{
 }
 
 .clear-note-item-button{
-  /* float: right; */
   position: absolute;
   bottom: 0;
   right: 0;
@@ -85,3 +117,11 @@ body{
   background-color: #B00020;
 }
 
+.see-entire-note-button{
+  position:absolute;
+  top:0;
+  right:0;
+  color: white;
+  shape-rendering: crispEdges;
+  background-color: #0fb000;
+}

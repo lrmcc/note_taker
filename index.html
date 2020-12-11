@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Note Taker</title>
         <link rel="stylesheet" href="style.css">
-        <script src="note_taker.js"></script>
+        <script src="note_taker.js" defer></script>
     </head>
 <body>
     <header>
@@ -15,19 +15,19 @@
 
     <div class="note-entry">
         <div class="note-input">
-        <label for="note-title-text" >Title: </label>
-        <input type="text" id="note-title-text" onfocus="this.value=''" value="Enter Note Title">
-        <label for="note-content-text" >Content: </label>
-        <textarea id="note-content" rows="4" cols="60" onfocus="this.value=''" onkeypress="submitWithReturn(event)">Enter Note Content Here</textarea><br>
+        <label id="note-title-entry-label" for="note-title-text" >Title: </label>
+        <input type="text" class="note-title-entry" id="note-title-text" onfocus="this.value=''" value="Enter Note Title"><br>
+        <label id="note-content-entry-label" for="note-content-text" >Content: </label>
+        <textarea class="note-content-entry" id="note-content" rows="4" cols="60" onfocus="this.value=''" onkeypress="submitWithReturn(event)">Enter Note Content Here</textarea><br>
         <input type="submit" class="submit-note-button" onclick="getInput();">
         </div>
     </div>
     <div class="note-entries">
         <div id="note-entries">
         </div>
-        <!-- <button class="export-notes-button" type="button" onclick="exportNotes()">Download</button><br> -->
         <button class="clear-notes-button" type="button" onclick="clearAllNotesPressed()">Clear</button>
     </div>
+
 
 </body>
 </html>
