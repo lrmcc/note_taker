@@ -3,10 +3,6 @@ let entries = [];
 let rowIDs = [];
 let cols = [];
 let tempEntries = [];
-let modalTitle = "";
-let modalBody = "";
-let emptyNoteEntries = "";
-let defaultNoteEntries = emptyNoteEntries + "";
 let colors = ["#61c6c0", "#cdc906", "#f86c75", "#f68eb1", "#ffa133" ,"#f13e42","#c890d1"];
 let colorCount = 0;
 
@@ -15,26 +11,24 @@ let closeModalButtons = document.querySelectorAll('[data-close-button]');
 let overlay = document.getElementById('overlay');
 
 function getInput(){
-    let noteName = document.getElementById("note-title-text").value;
-    let noteContent = document.getElementById("note-content").value;
-    let noteTuple = [noteName, noteContent];
+    let noteTuple = [document.getElementById("note-title-text").value, document.getElementById("note-content").value];
     getNote(noteTuple);
 }
 
 function getNote(noteTuple){
     entries.push(noteTuple);
-    entryCount = entries.length;
     putNote(noteTuple);
     clearInput();
 } 
 
 function putNote(noteTuple){
+    entryCount = entries.length;
     if ((entryCount % 3) === 1) addRow();
     addNote(entryCount, noteTuple);
 }
 
 function addRow(){
-    var noteEntries = getNoteEntries();
+    var noteEntries = document.getElementById("note-entries");
     var row = document.createElement("div");
     row.class="row";
     rowID = "row" + (rowIDs.length + 1);
@@ -67,8 +61,7 @@ function addNote(entryCount, noteTuple){
     note.innerHTML += "<br>";
     let noteContentID = ("noteContent" + entryCount);
     createNoteChild(noteContentID,"p", note, noteTuple[1], "note-content");
-    note.innerHTML += getSeeModalButton() + getClearNoteButton(entryCount);
-    setModal(entryCount);
+    note.innerHTML += getSeeModalButton(entryCount) + getClearNoteButton(entryCount);
     refreshButtons();
     buttonsEnable();
     cols[entryCount-1][1] = "notEmpty";
@@ -79,7 +72,7 @@ function clearNoteFromNotes(noteIDToRemove){
     if (entries.length === 0){
         clearNotes();
     }else{
-        var noteTable = getNoteEntries();
+        var noteTable = document.getElementById("note-entries");
         noteTable.innerHTML = "";
         tempEntries = entries;
         clearArrays();
@@ -90,7 +83,6 @@ function clearNoteFromNotes(noteIDToRemove){
         }
     }
 }
-
 
 function createNote(entryCount, col){
     let noteID = entryCount;
@@ -128,8 +120,6 @@ let setBackgroundColor = (id) => {
     colorCount++;
 }
 
-let changeColor = (element, colorChoice) => element.style.backgroundColor = colorChoice;
-
 let clearInput = () => {
     let notetitleInput = document.getElementById("note-title-text");
     notetitleInput.value = "Enter Note Title";
@@ -137,7 +127,7 @@ let clearInput = () => {
 }
 
 let clearNotes = () => {
-    clearNoteEntriesInnerHTML();
+    document.getElementById("note-entries").innerHTML = "";
     clearArrays();
 }
 
@@ -147,23 +137,15 @@ let clearArrays = () =>{
     cols = [];
 }
 
-let setInnerText = (elementID, words) => document.getElementById(elementID).innerText = words;
-
-let resetCols = (entryCount) => cols[entryCount][1] = "empty";
-
-let clearAllNotesPressed = () => (confirm("Are you sure you want to clear the table?")) ? clearNotes(): null;
-
 let setClass = (id, clssname) => document.getElementById(id).className = clssname;
 
 let submitWithReturn = (event) => (event.keyCode === 13) ? getInput() : null ;
 
-let getNoteEntries = () => document.getElementById("note-entries");
-
-let clearNoteEntriesInnerHTML = () => document.getElementById("note-entries").innerHTML = "";
+let clearAllNotesPressed = () => (confirm("Are you sure you want to clear the table?")) ? clearNotes(): null;
 
 let getClearNoteButton = (noteID) => "<button type='button' class='clear-note-item-button' onclick='clearNoteFromNotes(" + noteID + ")'>&times;</button>";
 
-let getSeeModalButton = () =>  "<button data-modal-target='#modal' '>Open Modal</button>";
+let getSeeModalButton = (noteID) =>  "<button data-modal-target='#modal' onclick='setModal(" + noteID + ")'>Open Note</button>";
 
 function refreshButtons(){
     openModalButtons = document.querySelectorAll('[data-modal-target]');
