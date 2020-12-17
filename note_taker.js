@@ -3,11 +3,16 @@ let entries = [];
 let rowIDs = [];
 let cols = [];
 let tempEntries = [];
-
+let modalTitle = "";
+let modalBody = "";
 let emptyNoteEntries = "";
 let defaultNoteEntries = emptyNoteEntries + "";
 let colors = ["#61c6c0", "#cdc906", "#f86c75", "#f68eb1", "#ffa133" ,"#f13e42","#c890d1"];
 let colorCount = 0;
+
+let openModalButtons = document.querySelectorAll('[data-modal-target]');
+let closeModalButtons = document.querySelectorAll('[data-close-button]');
+let overlay = document.getElementById('overlay');
 
 function getInput(){
     let noteName = document.getElementById("note-title-text").value;
@@ -62,13 +67,10 @@ function addNote(entryCount, noteTuple){
     note.innerHTML += "<br>";
     let noteContentID = ("noteContent" + entryCount);
     createNoteChild(noteContentID,"p", note, noteTuple[1], "note-content");
-    note.innerHTML += \
-    
-    
-    (entryCount) + getClearNoteButton(entryCount);
-    note.innerHTML += "<br>";
-    let noteModalID = ("noteModal" + entryCount);
-    createNoteChild(noteModalID,"p", note, noteTuple[1], "note-modal");
+    note.innerHTML += getSeeModalButton() + getClearNoteButton(entryCount);
+    setModal(entryCount);
+    refreshButtons();
+    buttonsEnable();
     cols[entryCount-1][1] = "notEmpty";
 }
 
@@ -112,14 +114,12 @@ function createChildSetIDAppend(elemType, elemID, appendToElem){
     return newElem;
 }
 
-function seeModal(noteID){
-    let modalID = "noteModal" + noteID;
-    setClass(modalID, ".note .note-modal.active");
-    // let noteModal = document.getElementById(modalID);
-    // noteModal.innerHTML += <button onClick>Close</button>;
+function setModal(noteID){
+    let modalTitle = document.querySelector(".title");
+    let modalBody = document.querySelector(".modal-body");
+    modalTitle.innerText =  entries[noteID - 1][0];
+    modalBody.innerText =  entries[noteID - 1][1];
 }
-
-function closeModal(){}
 
 let setBackgroundColor = (id) => {
     if (colorCount === 7) colorCount = 0;
@@ -163,4 +163,43 @@ let clearNoteEntriesInnerHTML = () => document.getElementById("note-entries").in
 
 let getClearNoteButton = (noteID) => "<button type='button' class='clear-note-item-button' onclick='clearNoteFromNotes(" + noteID + ")'>&times;</button>";
 
-let getSeeModalButton = (noteID) => "<button type='button' class='see-modal-button' onclick='seeModal(" + noteID + ")'>See Entire Note</button>";
+let getSeeModalButton = () =>  "<button data-modal-target='#modal' '>Open Modal</button>";
+
+function refreshButtons(){
+    openModalButtons = document.querySelectorAll('[data-modal-target]');
+    closeModalButtons = document.querySelectorAll('[data-close-button]');
+    overlay = document.getElementById('overlay');
+}
+
+function buttonsEnable() {
+    openModalButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = document.querySelector(button.dataset.modalTarget)
+            openModal(modal)
+        })
+    })
+    overlay.addEventListener('click', () => {
+        const modals = document.querySelectorAll('.modal.active')
+        modals.forEach(modal => {
+            closeModal(modal)
+        })
+    })
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = button.closest('.modal')
+            closeModal(modal)
+        })
+    })
+}
+
+function openModal(modal) {
+  if (modal == null) return
+  modal.classList.add('active')
+  overlay.classList.add('active')
+}
+
+function closeModal(modal) {
+  if (modal == null) return
+  modal.classList.remove('active')
+  overlay.classList.remove('active')
+}
